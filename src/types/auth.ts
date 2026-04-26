@@ -14,3 +14,10 @@ export interface LoginRequest {
     email: string;
     password: string;
 }
+
+export interface AuthContextType {
+    isAuthenticated: boolean;
+    login: (data: LoginRequest) => Promise<void>;
+    register: (data: RegisterRequest) => Promise<void>
+    logout: () => void;
+}
