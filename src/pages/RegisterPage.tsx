@@ -40,43 +40,63 @@ const RegisterPage = () => {
 
 
     return (
-        <div className="auth-container">
+    <div className="auth-container">
+
+        <div className="auth-left">
+            <div className="auth-left-content">
+                <div className="auth-brand">
+                    <div className="auth-brand-icon">
+                    </div>
+                    <span className="auth-brand-name">Smart Expense Tracker</span>
+                </div>
+                <div className="auth-left-headline">
+                    Контролюй<br />кожну <span>гривню</span>
+                </div>
+                <p className="auth-left-sub">
+                    Повноцінний трекер витрат із аналітикою, бюджетами та мультивалютними рахунками.
+                </p>
+                <div className="auth-left-stats">
+                    <div className="auth-stat"><div className="auth-stat-val">UAH</div><div className="auth-stat-lbl">Гривня</div></div>
+                    <div className="auth-stat"><div className="auth-stat-val">USD</div><div className="auth-stat-lbl">Долар</div></div>
+                    <div className="auth-stat"><div className="auth-stat-val">EUR</div><div className="auth-stat-lbl">Євро</div></div>
+                </div>
+            </div>
+        </div>
+
+        <div className="auth-right">
             <form className="auth-form" onSubmit={handleSubmit}>
-                <h2 className="auth-title">Створити акаунт</h2>
+                <div className="auth-form-header">
+                    <h2 className="auth-title">Створити акаунт</h2>
+                    <p className="auth-subtitle">Почніть безкоштовно вже сьогодні</p>
+                </div>
                 {error && <div className="auth-error">{error}</div>}
-
-                <div className="auth-fild">
-                    <label>Ім'я</label>
-                    <input type="text" className="auth-input" value={firstName}
-                        onChange={(e) => setFirstName(e.target.value)} required></input>
+                <div className="auth-row">
+                    <div className="auth-fild">
+                        <label>Ім'я</label>
+                        <input type="text" className="auth-input" placeholder="Анастасія" value={firstName} onChange={(e) => setFirstName(e.target.value)} required />
+                    </div>
+                    <div className="auth-fild">
+                        <label>Прізвище</label>
+                        <input type="text" className="auth-input" placeholder="Заровська" value={lastName} onChange={(e) => setLastName(e.target.value)} required />
+                    </div>
                 </div>
-
-                <div className="auth-fild">
-                    <label>Прізвище</label>
-                    <input type="text" className="auth-input" value={lastName}
-                        onChange={(e) => setLastName(e.target.value)} required></input>
-                </div>
-
                 <div className="auth-fild">
                     <label>Email</label>
-                    <input type="email" className="auth-input" value={email}
-                        onChange={(e) => setEmail(e.target.value)} required></input>
+                    <input type="email" className="auth-input" placeholder="nastia@example.com" value={email} onChange={(e) => setEmail(e.target.value)} required />
                 </div>
-
                 <div className="auth-fild">
                     <label>Пароль</label>
-                    <input type="password" className="auth-input" value={password}
-                        onChange={(e) => setPassword(e.target.value)} required></input>
+                    <input type="password" className="auth-input" placeholder="••••••••" value={password} onChange={(e) => setPassword(e.target.value)} required />
                 </div>
-
-                <button
-                    type="submit"
-                    className="auth-button"
-                    disabled={isLoading}>
-                    {isLoading ? 'Реєстрація...' : 'Зареєструватися'}</button>
+                <button type="submit" className="auth-button" disabled={isLoading}>
+                    {isLoading ? 'Реєстрація...' : 'Зареєструватися'}
+                </button>
+                <div className="auth-divider">або</div>
+                <div className="auth-footer">Вже є акаунт? <a href="/login">Увійти</a></div>
             </form>
         </div>
-    )
+    </div>
+);
 }
 
 export default RegisterPage;
