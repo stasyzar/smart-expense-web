@@ -1,0 +1,240 @@
+/* ===========================
+   RegisterPage.css
+   Dark finance theme
+   =========================== */
+
+/* Reset */
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+/* Fonts */
+@import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600&display=swap');
+
+/* ── Full-screen container ─────────────────────── */
+.auth-container {
+  width: 100vw;
+  min-height: 100vh;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  font-family: 'DM Sans', sans-serif;
+  background: #0d1117;
+  color: #e6edf3;
+}
+
+/* ── Left panel — decorative ───────────────────── */
+.auth-container::before {
+  content: '';
+  display: block;
+  background: #0d1117;
+  background-image:
+    radial-gradient(circle at 30% 40%, rgba(29, 158, 117, 0.18) 0%, transparent 55%),
+    radial-gradient(circle at 75% 80%, rgba(29, 158, 117, 0.08) 0%, transparent 50%);
+  position: relative;
+}
+
+/* ── Right panel — form side ───────────────────── */
+.auth-right {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 2rem 1.5rem;
+  background: #161b22;
+  border-left: 1px solid #21262d;
+}
+
+/* If you don't have a two-column layout,
+   use this single-column fallback instead: */
+@media (max-width: 768px) {
+  .auth-container {
+    grid-template-columns: 1fr;
+  }
+  .auth-container::before {
+    display: none;
+  }
+  .auth-right {
+    border-left: none;
+    padding: 1.5rem 1rem;
+  }
+}
+
+/* ── Form card ─────────────────────────────────── */
+.auth-form {
+  width: 100%;
+  max-width: 400px;
+  display: flex;
+  flex-direction: column;
+  gap: 1.1rem;
+}
+
+/* ── Logo ──────────────────────────────────────── */
+.auth-logo {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 0.5rem;
+}
+
+.auth-logo-icon {
+  width: 38px;
+  height: 38px;
+  border-radius: 10px;
+  background: #1D9E75;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.auth-logo-text {
+  font-size: 15px;
+  font-weight: 600;
+  color: #e6edf3;
+  letter-spacing: -0.01em;
+}
+
+/* ── Headings ──────────────────────────────────── */
+.auth-title {
+  font-size: 26px;
+  font-weight: 600;
+  color: #e6edf3;
+  letter-spacing: -0.02em;
+  line-height: 1.2;
+}
+
+.auth-subtitle {
+  font-size: 14px;
+  color: #8b949e;
+  margin-top: 4px;
+}
+
+/* ── Error banner ──────────────────────────────── */
+.auth-error {
+  background: rgba(248, 81, 73, 0.1);
+  color: #f85149;
+  border: 1px solid rgba(248, 81, 73, 0.3);
+  border-radius: 8px;
+  padding: 10px 14px;
+  font-size: 13px;
+  line-height: 1.5;
+}
+
+/* ── Field wrapper ─────────────────────────────── */
+.auth-fild {
+  display: flex;
+  flex-direction: column;
+  gap: 7px;
+}
+
+/* Two fields in one row */
+.auth-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+}
+
+/* ── Label ─────────────────────────────────────── */
+.auth-fild label {
+  font-size: 13px;
+  font-weight: 500;
+  color: #8b949e;
+}
+
+/* ── Input ─────────────────────────────────────── */
+.auth-input {
+  width: 100%;
+  height: 44px;
+  padding: 0 14px;
+  font-size: 14px;
+  font-family: 'DM Sans', sans-serif;
+  color: #e6edf3;
+  background: #0d1117;
+  border: 1px solid #30363d;
+  border-radius: 8px;
+  outline: none;
+  transition: border-color 0.15s, box-shadow 0.15s;
+}
+
+.auth-input::placeholder {
+  color: #484f58;
+}
+
+.auth-input:hover {
+  border-color: #3d444d;
+}
+
+.auth-input:focus {
+  border-color: #1D9E75;
+  box-shadow: 0 0 0 3px rgba(29, 158, 117, 0.15);
+}
+
+/* ── Submit button ─────────────────────────────── */
+.auth-button {
+  width: 100%;
+  height: 46px;
+  background: #1D9E75;
+  color: #fff;
+  border: none;
+  border-radius: 8px;
+  font-size: 15px;
+  font-weight: 600;
+  font-family: 'DM Sans', sans-serif;
+  cursor: pointer;
+  margin-top: 0.25rem;
+  letter-spacing: -0.01em;
+  transition: background 0.15s, transform 0.1s, box-shadow 0.15s;
+}
+
+.auth-button:hover {
+  background: #17835f;
+  box-shadow: 0 0 0 4px rgba(29, 158, 117, 0.2);
+}
+
+.auth-button:active {
+  transform: scale(0.98);
+}
+
+.auth-button:disabled {
+  background: #0F6E56;
+  color: rgba(255, 255, 255, 0.45);
+  cursor: not-allowed;
+  box-shadow: none;
+}
+
+/* ── Divider ───────────────────────────────────── */
+.auth-divider {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 12px;
+  color: #484f58;
+}
+
+.auth-divider::before,
+.auth-divider::after {
+  content: '';
+  flex: 1;
+  height: 1px;
+  background: #21262d;
+}
+
+/* ── Footer link ───────────────────────────────── */
+.auth-footer {
+  text-align: center;
+  font-size: 13px;
+  color: #8b949e;
+}
+
+.auth-footer a {
+  color: #3fb884;
+  text-decoration: none;
+  font-weight: 500;
+  transition: color 0.15s;
+}
+
+.auth-footer a:hover {
+  color: #5DCAA5;
+  text-decoration: underline;
+}
