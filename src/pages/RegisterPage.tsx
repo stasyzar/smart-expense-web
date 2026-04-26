@@ -2,6 +2,7 @@ import { useState } from "react";
 import { useAuth } from "../hooks/useAuth";
 import axios from 'axios';
 import '../styles/RegisterPage.css';
+import { Wallet } from "lucide-react";
 
 const RegisterPage = () => {
     const [email, setEmail] = useState('');
@@ -46,6 +47,7 @@ const RegisterPage = () => {
             <div className="auth-left-content">
                 <div className="auth-brand">
                     <div className="auth-brand-icon">
+                        <Wallet size={28} color="#3fb884" strokeWidth={2.5} />
                     </div>
                     <span className="auth-brand-name">Smart Expense Tracker</span>
                 </div>

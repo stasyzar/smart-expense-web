@@ -42,7 +42,7 @@
   width: 40px;
   height: 40px;
   border-radius: 10px;
-  background: #1D9E75;
+  background: #006a48;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -132,7 +132,7 @@
 }
 
 .auth-subtitle {
-  font-size: 16px;
+  font-size: 14px;
   color: #8b949e;
   margin-top: 6px;
 }
@@ -160,7 +160,7 @@
 }
 
 .auth-fild label {
-  font-size: 13px;
+  font-size: 16px;
   font-weight: 500;
   color: #8b949e;
 }
@@ -228,7 +228,7 @@
   display: flex;
   align-items: center;
   gap: 10px;
-  font-size: 12px;
+  font-size: 14px;
   color: #484f58;
 }
 
@@ -242,7 +242,7 @@
 
 .auth-footer {
   text-align: center;
-  font-size: 13px;
+  font-size: 14px;
   color: #8b949e;
 }
 
