@@ -21,7 +21,6 @@ const LoginPage = () => {
 
         try {
             await login({ email, password });
-            alert('Вхід успішний!');
         } catch (err) {
             if (axios.isAxiosError(err)) {
                 const status = err.response?.status;
@@ -45,52 +44,6 @@ const LoginPage = () => {
         }
     };
 
-    // return (
-    //     <AuthLayout>
-    //         <form className="auth-form" onSubmit={handleSubmit}>
-    //             <h2 className="form-title">Вхід у систему</h2>
-    //             <p className="form-subtitle">З поверненням! Введіть свої дані</p>
-
-    //             {error && <div className="auth-error-message">{error}</div>}
-
-    //             <div className="form-group">
-    //                 <label>Email</label>
-    //                 <input
-    //                     type="email"
-    //                     className="auth-input"
-    //                     placeholder="example@mail.com"
-    //                     value={email}
-    //                     onChange={(e) => setEmail(e.target.value)}
-    //                     required
-    //                 />
-    //             </div>
-
-    //             <div className="form-group">
-    //                 <label>Пароль</label>
-    //                 <input
-    //                     type="password"
-    //                     className="auth-input"
-    //                     placeholder="••••••••"
-    //                     value={password}
-    //                     onChange={(e) => setPassword(e.target.value)}
-    //                     required
-    //                 />
-    //             </div>
-
-    //             <button
-    //                 type="submit"
-    //                 className="auth-submit-btn"
-    //                 disabled={isLoading}
-    //             >
-    //                 {isLoading ? 'Завантаження...' : 'Увійти'}
-    //             </button>
-
-    //             <p className="auth-switch-text">
-    //                 Ще не маєте акаунту? <Link to="/register" className="auth-link">Зареєструватися</Link>
-    //             </p>
-    //         </form>
-    //     </AuthLayout>
-    // );
     return (
         <AuthLayout>
             <form className="auth-form" onSubmit={handleSubmit}>
