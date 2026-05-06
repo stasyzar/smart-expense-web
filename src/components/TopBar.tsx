@@ -1,4 +1,3 @@
-import React from 'react';
 import type { TopBarProps } from '../types/dashboard';
 
 const TopBar = ({ title, onAddClick }: TopBarProps) => {

@@ -1,10 +1,7 @@
-import React, { useEffect, useState } from "react";
+import React, { useCallback, useEffect, useReducer } from "react";
 import axios from "axios";
 import { useAuth } from "../hooks/useAuth";
 import accountService from "../services/accountService";
-import type { Account } from "../types/account";
-
-// Імпорт нових компонентів
 import Sidebar from "../components/Sidebar";
 import TopBar from "../components/TopBar";
 import StatCard from "../components/StatCard";
@@ -13,57 +10,62 @@ import AccountsWidget from "../components/AccountsWidget";
 
 import "../styles/DashboardPage.css";
 
+import { dashboardReducer, initialState } from "../reducers/dashboardReducer";
+import AddAccountModal from "../components/dashboard/AddAccountModal";
+
 const DashboardPage = () => {
-    const [accounts, setAccounts] = useState<Account[]>([]);
-    const [isLoading, setIsLoading] = useState<boolean>(true);
-    const [error, setError] = useState<string | null>(null);
-    const { logout } = useAuth();
+   const [state, dispatch] = useReducer(dashboardReducer, initialState);
+   const {logout} = useAuth();
 
-    useEffect(() => {
-        const fetchAccounts = async () => {
-            try {
-                setIsLoading(true);
-                setError(null);
-                const data = await accountService.getAccounts();
-                setAccounts(data);
-            } catch (err) {
-                if (axios.isAxiosError(err)) {
-                    const status = err.response?.status;
-                    const message = err.response?.data?.message;
-                    if (status === 401) {
-                        setError("Сесія завершилася. Будь ласка, увійдіть знову.");
-                    } else if (!status) {
-                        setError("Немає відповіді від сервера. Перевірте з’єднання.");
-                    } else {
-                        setError(message || "Не вдалося завантажити список рахунків.");
-                    }
-                } else {
-                    setError("Сталася внутрішня помилка додатку.");
-                    console.error("Non-Axios error:", err);
-                }
-            } finally {
-                setIsLoading(false);
+   const loadData = useCallback(async (isManual = false) => {
+    if (isManual) dispatch({ type: 'FETCH_START' });
+    try {
+        const data = await accountService.getAccounts();
+        
+        if (Array.isArray(data)) {
+            dispatch({ type: 'FETCH_SUCCESS', payload: data });
+        } else {
+            console.error("Очікувався масив, але прийшло:", data);
+            dispatch({ type: 'FETCH_ERROR', payload: "Неправильний формат даних від сервера" });
+        }
+    } catch (err) {
+        console.error("Повна помилка запиту:", err);
+
+        let message = "Сталася непередбачена помилка";
+        
+        if (axios.isAxiosError(err)) {
+            if (err.response) {
+                message = err.response.data?.message || `Помилка сервера: ${err.response.status}`;
+            } 
+            else if (err.request) {
+                message = "Сервер не відповідає. Перевірте, чи запущено бекенд на порті 8080";
+            } 
+            else {
+                message = err.message;
             }
-        };
-        fetchAccounts();
-    }, []);
-
-    const totalBalance = accounts.reduce((sum, a) => sum + a.balance, 0);
-
-    if (isLoading) {
-        return (
-            <div className="dashboard-status-container">
-                <div className="loader">Завантаження даних...</div>
-            </div>
-        );
+        }
+        
+        dispatch({ type: 'FETCH_ERROR', payload: message }); //
     }
+}, []);
+
+   useEffect(() => {
+        loadData();
+    }, [loadData]);
+
+    const totalBalance = state.accounts.reduce((sum, a) => sum + a.balance, 0);
+
+    if (state.isLoading) return <div className="loader">Завантаження...</div>;
 
     return (
         <div className="dashboard">
-            <Sidebar accounts={accounts} error={error} logout={logout} />
+            <Sidebar accounts={state.accounts} error={state.error} logout={logout} />
 
             <div className="dashboard-main">
-                <TopBar title="Огляд фінансів" onAddClick={() => alert("Додавання скоро!")} />
+                <TopBar 
+                    title="Огляд фінансів" 
+                    onAddClick={() => dispatch({ type: 'TOGGLE_MODAL', payload: true })} 
+                />
 
                 <div className="dashboard-content">
                     <div className="stats-row">
@@ -90,10 +92,16 @@ const DashboardPage = () => {
 
                     <div className="bottom-row">
                         <RecentTransactions />
-                        <AccountsWidget accounts={accounts} />
+                        <AccountsWidget accounts={state.accounts} />
                     </div>
                 </div>
             </div>
+
+            <AddAccountModal
+            isOpen = {state.isModalOpen}
+            onClose={() => dispatch({type: 'TOGGLE_MODAL', payload: false})}
+            onSuccess={() => loadData(true)}
+            />
         </div>
     );
 };
