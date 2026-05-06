@@ -6,6 +6,12 @@ const accountService = {
         const response = await axiosInstance.get<Account[]>('/accounts');
         return response.data;
     },
+
+    createAccount: async (accountData: Omit<Account, 'id'>): Promise <Account> => {
+        const response = await axiosInstance.post<Account>('/accounts', accountData);
+        return response.data;
+    }
+
 };
 
 export default accountService;
