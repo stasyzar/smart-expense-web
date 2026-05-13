@@ -3,8 +3,10 @@ import { AuthProvider } from './context/AuthProvider';
 import { useAuth } from './hooks/useAuth';
 import RegisterPage from './pages/RegisterPage';
 import LoginPage from './pages/LoginPage';
-import DashboardPage from './pages/DashboardPage';
+
 import './App.css';
+import TransactionsPage from './pages/TransactionsPage';
+import DashboardPage from './pages/DashboardPage';
 
 const AppRoutes = () => {
   const { isAuthenticated } = useAuth();
@@ -21,7 +23,11 @@ const AppRoutes = () => {
       />
       <Route 
         path="/dashboard" 
-        element={isAuthenticated ? <DashboardPage /> : <Navigate to="/login" />} 
+        element={isAuthenticated ? <DashboardPage  /> : <Navigate to="/login" />} 
+      />
+      <Route 
+        path="/transactions" 
+        element={isAuthenticated ? <TransactionsPage  /> : <Navigate to="/login" />} 
       />
       <Route path="*" element={<Navigate to={isAuthenticated ? "/dashboard" : "/login"} />} />
     </Routes>
