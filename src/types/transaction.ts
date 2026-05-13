@@ -8,19 +8,24 @@ export interface Transaction{
     description: string;
     categoryName: string;
     accountName: string;
+    type?: 'INCOME' | 'EXPENSE';
     transactionType: 'INCOME' | 'EXPENSE';
     createdAt: string;
 }
 
 export const CATEGORY_ICONS: Record<string, string> = {
-    "Їжа": "🍔",
+    "Продукти": "🛒",
     "Транспорт": "🚗",
+    "Житло та комуналка": "🏠",
     "Розваги": "🎬",
-    "Дохід": "💼",
     "Здоров'я": "🏥",
+    "Зарплата": "💼",
+    "Подарунки": "🎁",
+    "Їжа": "🍔",
+    "Дохід": "💼",
     "Покупки": "🛍️",
     "Комунальні": "🏠",
-    "Інше": "📦"
+    "Інше": "📦",
 };
 
 export interface CreateTransactionData {
@@ -39,3 +44,8 @@ export interface AddTransactionModalProps {
     categories: Category[];
     onSuccess: () => void;
 }
+
+export const normalizeTransaction = (tx: any): Transaction => ({
+    ...tx,
+    transactionType: (tx.transactionType || tx.type || 'EXPENSE').toUpperCase() as 'INCOME' | 'EXPENSE',
+});
