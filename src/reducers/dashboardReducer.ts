@@ -14,7 +14,7 @@ export type DashboardState = {
 
 export type DashboardAction =
     | { type: 'FETCH_START' }
-    | { type: 'FETCH_SUCCESS'; payload: { accounts: Account[]; transactions: Transaction[] } }
+    | { type: 'FETCH_SUCCESS'; payload:{ accounts: Account[]; transactions: Transaction[];}}
     | { type: 'FETCH_ERROR'; payload: string }
     | { type: 'TOGGLE_MODAL'; payload: boolean }
     | { type: 'SET_CATEGORIES'; payload: Category[] }
