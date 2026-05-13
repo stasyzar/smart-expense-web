@@ -9,7 +9,7 @@ export interface StatCardProps {
 
 export interface TopBarProps {
     title: string;
-    onAddClick: () => void;
+    onAddClick?: () => void;
 }
 
 export interface AccountsWidgetProps{
