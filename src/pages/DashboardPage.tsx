@@ -1,55 +1,59 @@
-import React, { useCallback, useEffect, useReducer } from "react";
+import { useCallback, useEffect, useReducer } from "react";
 import axios from "axios";
 import { useAuth } from "../hooks/useAuth";
 import accountService from "../services/accountService";
+import transactionService from "../services/transactionService";
+import categoryService from "../services/categoryService";
 import Sidebar from "../components/Sidebar";
 import TopBar from "../components/TopBar";
 import StatCard from "../components/StatCard";
 import RecentTransactions from "../components/RecentTransactions";
 import AccountsWidget from "../components/AccountsWidget";
-
+import { normalizeTransaction } from "../types/transaction";
 import "../styles/DashboardPage.css";
-
 import { dashboardReducer, initialState } from "../reducers/dashboardReducer";
 import AddAccountModal from "../components/dashboard/AddAccountModal";
 
+const RECENT_TRANSACTIONS_LIMIT = 5;
+
 const DashboardPage = () => {
-   const [state, dispatch] = useReducer(dashboardReducer, initialState);
-   const {logout} = useAuth();
+    const [state, dispatch] = useReducer(dashboardReducer, initialState);
+    const { logout } = useAuth();
 
-   const loadData = useCallback(async (isManual = false) => {
-    if (isManual) dispatch({ type: 'FETCH_START' });
-    try {
-        const data = await accountService.getAccounts();
-        
-        if (Array.isArray(data)) {
-            dispatch({ type: 'FETCH_SUCCESS', payload: data });
-        } else {
-            console.error("Очікувався масив, але прийшло:", data);
-            dispatch({ type: 'FETCH_ERROR', payload: "Неправильний формат даних від сервера" });
-        }
-    } catch (err) {
-        console.error("Повна помилка запиту:", err);
+    const loadData = useCallback(async (isManual = false) => {
+        if (isManual) dispatch({ type: 'FETCH_START' });
+        try {
+            const [accounts, transactions] = await Promise.all([
+                accountService.getAccounts(),
+                transactionService.getRecentTransactions(),
+                categoryService.getCategories(),
+            ]);
 
-        let message = "Сталася непередбачена помилка";
-        
-        if (axios.isAxiosError(err)) {
-            if (err.response) {
-                message = err.response.data?.message || `Помилка сервера: ${err.response.status}`;
-            } 
-            else if (err.request) {
-                message = "Сервер не відповідає. Перевірте, чи запущено бекенд на порті 8080";
-            } 
-            else {
-                message = err.message;
+            dispatch({
+                type: 'FETCH_SUCCESS',
+                payload: {
+                    accounts: Array.isArray(accounts) ? accounts : [],
+                    transactions: Array.isArray(transactions) ? transactions.map(normalizeTransaction) : [],
+                    // categories: Array.isArray(categories) ? categories : [],
+                },
+            });
+        } catch (err) {
+            console.error("Повна помилка запиту:", err);
+            let message = "Сталася непередбачена помилка";
+            if (axios.isAxiosError(err)) {
+                if (err.response) {
+                    message = err.response.data?.message || `Помилка сервера: ${err.response.status}`;
+                } else if (err.request) {
+                    message = "Сервер не відповідає. Перевірте, чи запущено бекенд на порті 8080";
+                } else {
+                    message = err.message;
+                }
             }
+            dispatch({ type: 'FETCH_ERROR', payload: message });
         }
-        
-        dispatch({ type: 'FETCH_ERROR', payload: message }); //
-    }
-}, []);
+    }, []);
 
-   useEffect(() => {
+    useEffect(() => {
         loadData();
     }, [loadData]);
 
@@ -62,17 +66,14 @@ const DashboardPage = () => {
             <Sidebar accounts={state.accounts} error={state.error} logout={logout} />
 
             <div className="dashboard-main">
-                <TopBar 
-                    title="Огляд фінансів" 
-                    onAddClick={() => dispatch({ type: 'TOGGLE_MODAL', payload: true })} 
-                />
+                <TopBar title="Огляд фінансів" />
 
                 <div className="dashboard-content">
                     <div className="stats-row">
-                        <StatCard 
-                            label="Загальний баланс" 
-                            value={`₴ ${totalBalance.toLocaleString('uk-UA')}`} 
-                            change="↑ 12% від минулого місяця" 
+                        <StatCard
+                            label="Загальний баланс"
+                            value={`₴ ${totalBalance.toLocaleString('uk-UA')}`}
+                            change="↑ 12% від минулого місяця"
                         />
                         <StatCard label="Доходи" value="₴ 42 000" type="income" change="↑ 8% від плану" />
                         <StatCard label="Витрати" value="₴ 12 450" type="expense" change="↑ 3% від минулого місяця" />
@@ -91,16 +92,16 @@ const DashboardPage = () => {
                     </div>
 
                     <div className="bottom-row">
-                        <RecentTransactions />
+                        <RecentTransactions transactions={state.transactions} limit={RECENT_TRANSACTIONS_LIMIT} />
                         <AccountsWidget accounts={state.accounts} />
                     </div>
                 </div>
             </div>
 
             <AddAccountModal
-            isOpen = {state.isModalOpen}
-            onClose={() => dispatch({type: 'TOGGLE_MODAL', payload: false})}
-            onSuccess={() => loadData(true)}
+                isOpen={state.isModalOpen}
+                onClose={() => dispatch({ type: 'TOGGLE_MODAL', payload: false })}
+                onSuccess={() => loadData(true)}
             />
         </div>
     );
