@@ -683,3 +683,38 @@
     padding: 1rem;
   }
 }
+
+
+.modal-amount-wrap {
+    position: relative;
+    display: flex;
+    align-items: center;
+}
+
+.modal-amount-wrap input {
+    flex: 1;
+    padding-right: 90px; /* room for the hint badge */
+}
+
+.modal-type-hint {
+    position: absolute;
+    right: 10px;
+    font-size: 11px;
+    font-weight: 600;
+    padding: 2px 8px;
+    border-radius: 20px;
+    pointer-events: none;
+    white-space: nowrap;
+}
+
+.modal-type-hint--income {
+    background: rgba(63, 184, 132, 0.12);
+    color: var(--income);
+    border: 1px solid rgba(63, 184, 132, 0.2);
+}
+
+.modal-type-hint--expense {
+    background: rgba(248, 81, 73, 0.1);
+    color: var(--expense);
+    border: 1px solid rgba(248, 81, 73, 0.18);
+}
