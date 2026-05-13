@@ -10,6 +10,10 @@ const transactionService = {
     createTransaction: async (data: CreateTransactionData) =>{
         const response = await axiosInstance.post('/transactions', data);
         return response.data;
+    },
+
+    deleteTransaction: async (id: number): Promise<void> =>{
+       await axiosInstance.delete(`/transactions/${id}`);
     }
 }
 

@@ -1,0 +1,233 @@
+/* ══════════════════════════════════════════
+   TRANSACTIONS PAGE
+   ══════════════════════════════════════════ */
+
+/* Toolbar */
+.tx-toolbar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    flex-wrap: wrap;
+}
+
+.tx-toolbar-left {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    flex-wrap: wrap;
+}
+
+/* Search */
+.tx-search-wrap {
+    position: relative;
+    display: flex;
+    align-items: center;
+}
+
+.tx-search-icon {
+    position: absolute;
+    left: 10px;
+    color: var(--text-tertiary);
+    pointer-events: none;
+}
+
+.tx-search {
+    background: var(--bg-surface);
+    border: 1px solid var(--border-light);
+    border-radius: var(--radius-sm);
+    color: var(--text-primary);
+    font-family: var(--font);
+    font-size: 13px;
+    padding: 7px 12px 7px 32px;
+    width: 240px;
+    outline: none;
+    transition: border-color 0.15s;
+}
+
+.tx-search::placeholder {
+    color: var(--text-tertiary);
+}
+
+.tx-search:focus {
+    border-color: var(--green);
+}
+
+/* Type filter tabs */
+.tx-type-tabs {
+    display: flex;
+    gap: 3px;
+    background: var(--bg-raised);
+    border: 1px solid var(--border-light);
+    border-radius: var(--radius-sm);
+    padding: 3px;
+}
+
+.tx-type-tab {
+    font-size: 12px;
+    font-weight: 500;
+    font-family: var(--font);
+    padding: 4px 14px;
+    border-radius: 4px;
+    border: none;
+    background: transparent;
+    color: var(--text-secondary);
+    cursor: pointer;
+    transition: background 0.12s, color 0.12s;
+}
+
+.tx-type-tab:hover {
+    color: var(--text-primary);
+}
+
+.tx-type-tab.active {
+    background: var(--bg-hover);
+    color: var(--text-primary);
+}
+
+.tx-type-tab--income.active {
+    background: rgba(63, 184, 132, 0.15);
+    color: var(--income);
+}
+
+.tx-type-tab--expense.active {
+    background: rgba(248, 81, 73, 0.12);
+    color: var(--expense);
+}
+
+/* Table card */
+.tx-table-card {
+    padding: 0;
+    overflow: hidden;
+}
+
+.tx-table-wrap {
+    overflow-x: auto;
+}
+
+.tx-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 13px;
+}
+
+.tx-table thead tr {
+    border-bottom: 1px solid var(--border);
+}
+
+.tx-table th {
+    padding: 11px 16px;
+    text-align: left;
+    font-size: 11px;
+    font-weight: 500;
+    color: var(--text-tertiary);
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    white-space: nowrap;
+    background: var(--bg-raised);
+    user-select: none;
+}
+
+.tx-th--sortable {
+    cursor: pointer;
+}
+
+.tx-th--sortable:hover .tx-th-inner {
+    color: var(--text-primary);
+}
+
+.tx-th-inner {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    transition: color 0.1s;
+}
+
+.tx-sort-icon {
+    font-size: 10px;
+    color: var(--text-tertiary);
+    opacity: 0.7;
+}
+
+.tx-table td {
+    padding: 11px 16px;
+    border-bottom: 1px solid var(--border);
+    vertical-align: middle;
+    color: var(--text-primary);
+}
+
+.tx-tr:last-child td {
+    border-bottom: none;
+}
+
+.tx-tr:hover td {
+    background: var(--bg-raised);
+}
+
+/* Cell types */
+.tx-cell-category {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-weight: 500;
+}
+
+.tx-icon-sm {
+    font-size: 16px;
+    line-height: 1;
+}
+
+.tx-cell-desc {
+    color: var(--text-secondary);
+}
+
+.tx-cell-account {
+    color: var(--text-secondary);
+    font-size: 12px;
+}
+
+.tx-cell-date {
+    color: var(--text-tertiary);
+    font-size: 12px;
+    white-space: nowrap;
+}
+
+/* Type badge */
+.tx-badge {
+    display: inline-block;
+    font-size: 11px;
+    font-weight: 500;
+    padding: 2px 9px;
+    border-radius: 20px;
+    letter-spacing: 0.02em;
+}
+
+.tx-badge--income {
+    background: rgba(63, 184, 132, 0.12);
+    color: var(--income);
+    border: 1px solid rgba(63, 184, 132, 0.2);
+}
+
+.tx-badge--expense {
+    background: rgba(248, 81, 73, 0.1);
+    color: var(--expense);
+    border: 1px solid rgba(248, 81, 73, 0.18);
+}
+
+/* Empty / loading */
+.tx-table-empty {
+    padding: 3rem 1.5rem;
+    text-align: center;
+    color: var(--text-tertiary);
+    font-size: 13px;
+}
+
+/* Footer */
+.tx-table-footer {
+    padding: 10px 16px;
+    border-top: 1px solid var(--border);
+    font-size: 11px;
+    color: var(--text-tertiary);
+    background: var(--bg-raised);
+    text-align: right;
+}
