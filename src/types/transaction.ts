@@ -2,7 +2,7 @@ import type { Account } from "./account";
 import type { Category } from "./category";
 
 /* eslint-disable @typescript-eslint/no-explicit-any */
-export interface Transaction{
+export interface Transaction {
     id: number;
     amount: number;
     description: string;
