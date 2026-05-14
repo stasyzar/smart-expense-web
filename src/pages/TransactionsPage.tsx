@@ -16,10 +16,11 @@ import categoryService from "../services/categoryService";
 import Sidebar from "../components/Sidebar";
 import TopBar from "../components/TopBar";
 import AddTransactionModal from "../components/dashboard/AddTransactionModal";
-import { CATEGORY_ICONS, type Transaction, normalizeTransaction } from "../types/transaction";
+import { CATEGORY_ICONS, type Transaction, normalizeTransaction, enrichTransactions } from "../types/transaction";
 import { dashboardReducer, initialState } from "../reducers/dashboardReducer";
 import "../styles/DashboardPage.css";
 import "../styles/TransactionsPage.css";
+import "../styles/Modal.css";
 
 const columnHelper = createColumnHelper<Transaction>();
 
@@ -36,18 +37,26 @@ const TransactionsPage = () => {
     const loadData = useCallback(async (isManual = false) => {
         if (isManual) dispatch({ type: 'FETCH_START' });
         try {
-            const [accounts, transactions, categories] = await Promise.all([
+            const [accounts, rawTransactions, categories] = await Promise.all([
                 accountService.getAccounts(),
                 transactionService.getRecentTransactions(),
                 categoryService.getCategories(),
             ]);
 
+            const normalizedAccounts = Array.isArray(accounts) ? accounts : [];
+            const normalizedCategories = Array.isArray(categories) ? categories : [];
+            const transactions = enrichTransactions(
+                (Array.isArray(rawTransactions) ? rawTransactions : []).map(normalizeTransaction),
+                normalizedAccounts,
+                normalizedCategories,
+            );
+
             dispatch({
                 type: 'FETCH_SUCCESS',
                 payload: {
-                    accounts: Array.isArray(accounts) ? accounts : [],
-                    transactions: Array.isArray(transactions) ? transactions.map(normalizeTransaction) : [],
-                    categories: Array.isArray(categories) ? categories : [],
+                    accounts: normalizedAccounts,
+                    transactions,
+                    categories: normalizedCategories,
                 },
             });
         } catch (err) {
