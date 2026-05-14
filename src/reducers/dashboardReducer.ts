@@ -14,7 +14,7 @@ export type DashboardState = {
 
 export type DashboardAction =
     | { type: 'FETCH_START' }
-    | { type: 'FETCH_SUCCESS'; payload:{ accounts: Account[]; transactions: Transaction[];}}
+    | { type: 'FETCH_SUCCESS'; payload: { accounts: Account[]; transactions: Transaction[]; categories: Category[] } }
     | { type: 'FETCH_ERROR'; payload: string }
     | { type: 'TOGGLE_MODAL'; payload: boolean }
     | { type: 'SET_CATEGORIES'; payload: Category[] }
@@ -39,8 +39,9 @@ export function dashboardReducer(state: DashboardState, action: DashboardAction)
                 ...state,
                 accounts: action.payload.accounts,
                 transactions: action.payload.transactions,
+                categories: action.payload.categories,
                 isLoading: false,
-                error: null
+                error: null,
             };
         case 'FETCH_ERROR':
             return { ...state, isLoading: false, error: action.payload };
