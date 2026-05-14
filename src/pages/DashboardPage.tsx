@@ -9,7 +9,7 @@ import TopBar from "../components/TopBar";
 import StatCard from "../components/StatCard";
 import RecentTransactions from "../components/RecentTransactions";
 import AccountsWidget from "../components/AccountsWidget";
-import { normalizeTransaction } from "../types/transaction";
+import { normalizeTransaction, enrichTransactions } from "../types/transaction";
 import "../styles/DashboardPage.css";
 import { dashboardReducer, initialState } from "../reducers/dashboardReducer";
 import AddAccountModal from "../components/dashboard/AddAccountModal";
@@ -23,22 +23,30 @@ const DashboardPage = () => {
     const loadData = useCallback(async (isManual = false) => {
         if (isManual) dispatch({ type: 'FETCH_START' });
         try {
-            const [accounts, transactions, categories] = await Promise.all([
+            const [accounts, rawTransactions, categories] = await Promise.all([
                 accountService.getAccounts(),
                 transactionService.getRecentTransactions(),
                 categoryService.getCategories(),
             ]);
 
+            const normalizedAccounts = Array.isArray(accounts) ? accounts : [];
+            const normalizedCategories = Array.isArray(categories) ? categories : [];
+            const transactions = enrichTransactions(
+                (Array.isArray(rawTransactions) ? rawTransactions : []).map(normalizeTransaction),
+                normalizedAccounts,
+                normalizedCategories,
+            );
+
             dispatch({
                 type: 'FETCH_SUCCESS',
                 payload: {
-                    accounts: Array.isArray(accounts) ? accounts : [],
-                    transactions: Array.isArray(transactions) ? transactions.map(normalizeTransaction) : [],
-                    categories: Array.isArray(categories) ? categories : [],
+                    accounts: normalizedAccounts,
+                    transactions,
+                    categories: normalizedCategories,
                 },
             });
         } catch (err) {
-            console.error("Повна помилка запиту:", err);
+            console.error(err);
             let message = "Сталася непередбачена помилка";
             if (axios.isAxiosError(err)) {
                 if (err.response) {
