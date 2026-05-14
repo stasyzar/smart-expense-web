@@ -1,0 +1,165 @@
+.modal-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.55);
+    backdrop-filter: blur(3px);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 1000;
+    padding: 1rem;
+}
+
+.modal-content {
+    background: var(--bg-surface);
+    border: 1px solid var(--border-light);
+    border-radius: var(--radius-lg);
+    padding: 1.75rem 1.75rem 1.5rem;
+    width: 100%;
+    max-width: 420px;
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+}
+
+.modal-content h2,
+.modal-content h3 {
+    font-size: 15px;
+    font-weight: 600;
+    color: var(--text-primary);
+    letter-spacing: -0.01em;
+    margin-bottom: 1.25rem;
+}
+
+/* Inputs & selects inside modal */
+.modal-content input,
+.modal-content select {
+    width: 100%;
+    background: var(--bg-raised);
+    border: 1px solid var(--border-light);
+    border-radius: var(--radius-sm);
+    color: var(--text-primary);
+    font-family: var(--font);
+    font-size: 13px;
+    padding: 9px 12px;
+    margin-bottom: 10px;
+    outline: none;
+    transition: border-color 0.15s;
+    -webkit-appearance: none;
+    appearance: none;
+}
+
+.modal-content input::placeholder {
+    color: var(--text-tertiary);
+}
+
+.modal-content input:focus,
+.modal-content select:focus {
+    border-color: var(--green);
+}
+
+.modal-content select {
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 16 16'%3E%3Cpath d='M4 6l4 4 4-4' stroke='%238b949e' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 10px center;
+    padding-right: 32px;
+    cursor: pointer;
+}
+
+/* Amount wrap (for the type hint badge) */
+.modal-amount-wrap {
+    position: relative;
+    display: flex;
+    align-items: center;
+    margin-bottom: 10px;
+}
+
+.modal-amount-wrap input {
+    flex: 1;
+    margin-bottom: 0;
+    padding-right: 100px;
+}
+
+.modal-type-hint {
+    position: absolute;
+    right: 10px;
+    font-size: 11px;
+    font-weight: 600;
+    padding: 2px 9px;
+    border-radius: 20px;
+    pointer-events: none;
+    white-space: nowrap;
+}
+
+.modal-type-hint--income {
+    background: rgba(63, 184, 132, 0.12);
+    color: var(--income);
+    border: 1px solid rgba(63, 184, 132, 0.2);
+}
+
+.modal-type-hint--expense {
+    background: rgba(248, 81, 73, 0.1);
+    color: var(--expense);
+    border: 1px solid rgba(248, 81, 73, 0.18);
+}
+
+/* Error message */
+.error-message {
+    font-size: 12px;
+    color: var(--expense);
+    background: rgba(248, 81, 73, 0.08);
+    border: 1px solid rgba(248, 81, 73, 0.15);
+    border-radius: var(--radius-sm);
+    padding: 7px 10px;
+    margin-bottom: 10px;
+}
+
+/* Buttons row */
+.modal-buttons,
+.modal-actions {
+    display: flex;
+    gap: 8px;
+    margin-top: 6px;
+}
+
+.modal-buttons button,
+.modal-actions button {
+    flex: 1;
+    padding: 9px 0;
+    border-radius: var(--radius-sm);
+    font-size: 13px;
+    font-weight: 500;
+    font-family: var(--font);
+    cursor: pointer;
+    border: 1px solid var(--border-light);
+    background: var(--bg-raised);
+    color: var(--text-secondary);
+    transition: background 0.12s, color 0.12s, border-color 0.12s;
+}
+
+.modal-buttons button:hover,
+.modal-actions button:hover {
+    background: var(--bg-hover);
+    color: var(--text-primary);
+}
+
+.modal-buttons button:disabled,
+.modal-actions button:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+.modal-buttons .btn-primary,
+.modal-actions button[type="submit"] {
+    background: var(--green);
+    color: #fff;
+    border-color: var(--green);
+}
+
+.modal-buttons .btn-primary:hover,
+.modal-actions button[type="submit"]:hover {
+    background: #17835f;
+    border-color: #17835f;
+    color: #fff;
+}
