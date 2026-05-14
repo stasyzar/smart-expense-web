@@ -1,6 +1,7 @@
 import { useState } from "react";
 import transactionService from "../../services/transactionService";
 import type { AddTransactionModalProps } from "../../types/transaction";
+import "../../styles/Modal.css";
 
 const AddTransactionModal: React.FC<AddTransactionModalProps> = ({ isOpen, onClose, accounts, categories, onSuccess }) => {
     const [formData, setFormData] = useState({
@@ -13,12 +14,10 @@ const AddTransactionModal: React.FC<AddTransactionModalProps> = ({ isOpen, onClo
 
     if (!isOpen) return null;
 
-    // Derive type from amount sign: negative = EXPENSE, positive = INCOME
     const numericAmount = Number(formData.amount);
     const derivedType: 'INCOME' | 'EXPENSE' = numericAmount >= 0 ? 'INCOME' : 'EXPENSE';
 
     const handleAmountChange = (value: string) => {
-        // When amount changes, reset category since type may flip
         const prev = Number(formData.amount);
         const next = Number(value);
         const typeFlipped = (prev >= 0) !== (next >= 0);
@@ -53,11 +52,10 @@ const AddTransactionModal: React.FC<AddTransactionModalProps> = ({ isOpen, onClo
     const filteredCategories = categories.filter(c => c.type === derivedType);
 
     return (
-        <div className="modal-overlay">
-            <div className="modal-content">
+        <div className="modal-overlay" onClick={onClose}>
+            <div className="modal-content" onClick={e => e.stopPropagation()}>
                 <h2>Додати транзакцію</h2>
                 <form onSubmit={handleSubmit}>
-
                     <div className="modal-amount-wrap">
                         <input
                             type="number"
