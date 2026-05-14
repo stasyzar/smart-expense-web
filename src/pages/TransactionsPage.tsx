@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useReducer, useState } from "react";
+import { useCallback, useEffect, useReducer, useMemo, useState } from "react";
 import axios from "axios";
 import {
     useReactTable,
@@ -16,7 +16,7 @@ import categoryService from "../services/categoryService";
 import Sidebar from "../components/Sidebar";
 import TopBar from "../components/TopBar";
 import AddTransactionModal from "../components/dashboard/AddTransactionModal";
-import { CATEGORY_ICONS, type Transaction } from "../types/transaction";
+import { CATEGORY_ICONS, type Transaction, normalizeTransaction } from "../types/transaction";
 import { dashboardReducer, initialState } from "../reducers/dashboardReducer";
 import "../styles/DashboardPage.css";
 import "../styles/TransactionsPage.css";
@@ -28,6 +28,7 @@ const TransactionsPage = () => {
     const { logout } = useAuth();
 
     const [isAddModalOpen, setIsAddModalOpen] = useState(false);
+    const [deletingId, setDeletingId] = useState<number | null>(null);
     const [globalFilter, setGlobalFilter] = useState("");
     const [sorting, setSorting] = useState<SortingState>([{ id: "createdAt", desc: true }]);
     const [typeFilter, setTypeFilter] = useState<"ALL" | "INCOME" | "EXPENSE">("ALL");
@@ -35,17 +36,18 @@ const TransactionsPage = () => {
     const loadData = useCallback(async (isManual = false) => {
         if (isManual) dispatch({ type: 'FETCH_START' });
         try {
-            const [accounts, transactions] = await Promise.all([
+            const [accounts, transactions, categories] = await Promise.all([
                 accountService.getAccounts(),
                 transactionService.getRecentTransactions(),
+                categoryService.getCategories(),
             ]);
 
             dispatch({
                 type: 'FETCH_SUCCESS',
                 payload: {
                     accounts: Array.isArray(accounts) ? accounts : [],
-                    transactions: Array.isArray(transactions) ? transactions : [],
-                    
+                    transactions: Array.isArray(transactions) ? transactions.map(normalizeTransaction) : [],
+                    categories: Array.isArray(categories) ? categories : [],
                 },
             });
         } catch (err) {
@@ -64,31 +66,37 @@ const TransactionsPage = () => {
         }
     }, []);
 
-    const loadCategories = useCallback(async () => {
-        try {
-            const data = await categoryService.getCategories();
-            if (Array.isArray(data)) dispatch({ type: 'SET_CATEGORIES', payload: data });
-        } catch (err) {
-            console.error(err);
-        }
-    }, []);
-
     useEffect(() => {
         loadData();
-        loadCategories();
-    }, [loadData, loadCategories]);
+    }, [loadData]);
+
+    const handleDelete = useCallback(async (id: number) => {
+        if (!confirm("Видалити транзакцію?")) return;
+        setDeletingId(id);
+        try {
+            await transactionService.deleteTransaction(id);
+            await loadData(true);
+        } catch (err) {
+            console.error(err);
+            alert("Помилка при видаленні транзакції");
+        } finally {
+            setDeletingId(null);
+        }
+    }, [loadData]);
 
     const formatDate = (dateString: string) =>
         new Intl.DateTimeFormat("uk-UA", { day: "numeric", month: "short", year: "numeric" }).format(
             new Date(dateString)
         );
 
-    const filteredByType =
+    const filteredByType = useMemo(() =>
         typeFilter === "ALL"
             ? state.transactions
-            : state.transactions.filter((tx) => tx.transactionType === typeFilter);
+            : state.transactions.filter((tx) => tx.transactionType === typeFilter),
+        [state.transactions, typeFilter]
+    );
 
-    const columns = [
+    const columns = useMemo(() => [
         columnHelper.accessor("categoryName", {
             header: "Категорія",
             cell: (info) => (
@@ -130,7 +138,28 @@ const TransactionsPage = () => {
             header: "Дата",
             cell: (info) => <span className="tx-cell-date">{formatDate(info.getValue())}</span>,
         }),
-    ];
+        columnHelper.display({
+            id: "actions",
+            header: "",
+            cell: (info) => {
+                const id = info.row.original.id;
+                return (
+                    <button
+                        className="tx-delete-btn"
+                        onClick={() => handleDelete(id)}
+                        disabled={deletingId === id}
+                        title="Видалити"
+                    >
+                        {deletingId === id ? "..." : (
+                            <svg width="13" height="13" viewBox="0 0 16 16" fill="none">
+                                <path d="M2 4h12M5 4V2h6v2M6 7v5M10 7v5M3 4l1 10h8l1-10" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+                            </svg>
+                        )}
+                    </button>
+                );
+            },
+        }),
+    ], [handleDelete, deletingId]);
 
     const table = useReactTable({
         data: filteredByType,
@@ -153,7 +182,6 @@ const TransactionsPage = () => {
                 <TopBar title="Транзакції" />
 
                 <div className="dashboard-content">
-                    {/* Toolbar */}
                     <div className="tx-toolbar">
                         <div className="tx-toolbar-left">
                             <div className="tx-search-wrap">
@@ -189,10 +217,13 @@ const TransactionsPage = () => {
                         </button>
                     </div>
 
-                    {/* Table */}
                     <div className="card tx-table-card">
                         {filteredByType.length === 0 ? (
-                            <div className="tx-table-empty">Транзакцій поки немає</div>
+                            <div className="tx-table-empty">
+                                {typeFilter === "ALL"
+                                    ? "Транзакцій поки немає"
+                                    : `Немає транзакцій «${typeFilter === "INCOME" ? "Доходи" : "Витрати"}»`}
+                            </div>
                         ) : (
                             <div className="tx-table-wrap">
                                 <table className="tx-table">
@@ -209,11 +240,9 @@ const TransactionsPage = () => {
                                                             {flexRender(header.column.columnDef.header, header.getContext())}
                                                             {header.column.getCanSort() && (
                                                                 <span className="tx-sort-icon">
-                                                                    {header.column.getIsSorted() === "asc"
-                                                                        ? "↑"
-                                                                        : header.column.getIsSorted() === "desc"
-                                                                            ? "↓"
-                                                                            : "↕"}
+                                                                    {header.column.getIsSorted() === "asc" ? "↑"
+                                                                        : header.column.getIsSorted() === "desc" ? "↓"
+                                                                        : "↕"}
                                                                 </span>
                                                             )}
                                                         </div>
