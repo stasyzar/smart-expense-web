@@ -23,7 +23,7 @@ const DashboardPage = () => {
     const loadData = useCallback(async (isManual = false) => {
         if (isManual) dispatch({ type: 'FETCH_START' });
         try {
-            const [accounts, transactions] = await Promise.all([
+            const [accounts, transactions, categories] = await Promise.all([
                 accountService.getAccounts(),
                 transactionService.getRecentTransactions(),
                 categoryService.getCategories(),
@@ -34,7 +34,7 @@ const DashboardPage = () => {
                 payload: {
                     accounts: Array.isArray(accounts) ? accounts : [],
                     transactions: Array.isArray(transactions) ? transactions.map(normalizeTransaction) : [],
-                    // categories: Array.isArray(categories) ? categories : [],
+                    categories: Array.isArray(categories) ? categories : [],
                 },
             });
         } catch (err) {
