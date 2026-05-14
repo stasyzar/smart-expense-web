@@ -8,6 +8,8 @@ export interface Transaction {
     description: string;
     categoryName: string;
     accountName: string;
+    categoryId: string;
+    accountId: string;
     type?: 'INCOME' | 'EXPENSE';
     transactionType: 'INCOME' | 'EXPENSE';
     createdAt: string;
@@ -45,7 +47,26 @@ export interface AddTransactionModalProps {
     onSuccess: () => void;
 }
 
+// Basic normalize: maps backend "type" field -> "transactionType"
 export const normalizeTransaction = (tx: any): Transaction => ({
     ...tx,
     transactionType: (tx.transactionType || tx.type || 'EXPENSE').toUpperCase() as 'INCOME' | 'EXPENSE',
+    categoryName: tx.categoryName || '',
+    accountName: tx.accountName || '',
 });
+
+// Enrich: fills in categoryName and accountName from local lookup maps
+export const enrichTransactions = (
+    transactions: Transaction[],
+    accounts: Account[],
+    categories: Category[],
+): Transaction[] => {
+    const accountMap = new Map(accounts.map(a => [a.id, a.name]));
+    const categoryMap = new Map(categories.map(c => [c.id, c.name]));
+
+    return transactions.map(tx => ({
+        ...tx,
+        accountName: accountMap.get(tx.accountId) || tx.accountName || '—',
+        categoryName: categoryMap.get(tx.categoryId) || tx.categoryName || '—',
+    }));
+};
