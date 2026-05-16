@@ -7,6 +7,7 @@ import LoginPage from './pages/LoginPage';
 import './App.css';
 import TransactionsPage from './pages/TransactionsPage';
 import DashboardPage from './pages/DashboardPage';
+import AccountsPage from './pages/AccountsPage';
 
 const AppRoutes = () => {
   const { isAuthenticated } = useAuth();
@@ -28,6 +29,10 @@ const AppRoutes = () => {
       <Route 
         path="/transactions" 
         element={isAuthenticated ? <TransactionsPage  /> : <Navigate to="/login" />} 
+      />
+      <Route 
+        path="/accounts" 
+        element={isAuthenticated ? <AccountsPage  /> : <Navigate to="/login" />} 
       />
       <Route path="*" element={<Navigate to={isAuthenticated ? "/dashboard" : "/login"} />} />
     </Routes>
