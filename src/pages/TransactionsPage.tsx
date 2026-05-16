@@ -160,6 +160,9 @@ const TransactionsPage = () => {
                         title="Видалити"
                     >
                         {deletingId === id ? "..." : (
+                            // <span className="material-icons" style={{ background: "transparent" }}>
+                            //     delete
+                            // </span>
                             <svg width="13" height="13" viewBox="0 0 16 16" fill="none">
                                 <path d="M2 4h12M5 4V2h6v2M6 7v5M10 7v5M3 4l1 10h8l1-10" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
                             </svg>
