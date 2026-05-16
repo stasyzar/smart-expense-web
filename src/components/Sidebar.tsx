@@ -51,7 +51,7 @@ const Sidebar = ({ accounts, error, logout }: SidebarProps) => {
                     <div className="sidebar-empty">Рахунків ще немає</div>
                 ) : (
                     accounts.map((account) => (
-                        <div className="sidebar-account-chip" key={account.id}>
+                        <Link to={`/accounts/`} className="sidebar-account-chip" key={account.id}>
                             <div className="chip-name">
                                 {account.type === 'CARD' && '💳'}
                                 {account.type === 'CASH' && '💵'}
@@ -61,7 +61,7 @@ const Sidebar = ({ accounts, error, logout }: SidebarProps) => {
                             <div className="chip-balance">
                                 {account.balance.toLocaleString('uk-UA')} {account.currency}
                             </div>
-                        </div>
+                        </Link>
                     ))
                 )}
             </div>
