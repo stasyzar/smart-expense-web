@@ -231,3 +231,15 @@
     background: var(--bg-raised);
     text-align: right;
 }
+
+.tx-delete-btn {
+    background-color: transparent;
+    border: none;
+    padding: 0; 
+    cursor: pointer;
+    color: #f1f5f9;
+}
+
+.tx-delete-btn:hover {
+    color: #ef4444;
+}
