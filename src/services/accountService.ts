@@ -10,6 +10,10 @@ const accountService = {
     createAccount: async (accountData: Omit<Account, 'id'>): Promise <Account> => {
         const response = await axiosInstance.post<Account>('/accounts', accountData);
         return response.data;
+    },
+
+    deleteAccount: async(id: string): Promise<void> =>{
+        await axiosInstance.delete(`/accounts/${id}`)
     }
 
 };
