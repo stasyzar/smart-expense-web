@@ -1,3 +1,4 @@
+import { Link } from 'react-router-dom';
 import type { AccountsWidgetProps } from '../types/dashboard';
 
 const AccountsWidget = ({ accounts }: AccountsWidgetProps) => {
@@ -5,7 +6,7 @@ const AccountsWidget = ({ accounts }: AccountsWidgetProps) => {
         <div className="card">
             <div className="card-header">
                 <div className="card-title">Рахунки</div>
-                <div className="card-link">Керувати →</div>
+                <Link to="/accounts" className="card-link">Керувати →</Link>
             </div>
             <div className="accounts-list">
                 {accounts.length === 0 ? (
